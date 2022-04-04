@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React from "react";
+import { MapContainer, TileLayer, Marker,  } from 'react-leaflet';
 import useSwr from "swr";
 import './App.css';
 
@@ -7,21 +7,21 @@ const fetcher = (...args) => fetch(...args).then(response => response.json());
 
 export default function App() {
   const url =
-    "https://data.police.uk/api/crimes-street/all-crime?lat=52.629729&lng=-1.131592&date=2019-10";
+  "https://tipqa.trondheim.kommune.no/luftkvalitet-api/v1/sensors";
   const { data, error } = useSwr(url, { fetcher });
   const crimes = data && !error ? data.slice(0, 100) : [];
 
   return (
-    <MapContainer center={[52.6376, -1.135171]} zoom={12} scrollWheelZoom={false}>
+    <MapContainer center={[63.429799, 10.393418]} zoom={13} scrollWheelZoom={true}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {crimes.map(crime => (
+      {crimes.map(geo => (
         <Marker
-          key={crime.id}
-          position={[crime.location.latitude, crime.location.longitude]}
+          key={geo.deviceName}
+          position={[geo.lat*180/3.14159265359, geo.lon*180/3.14159265359]}
         />
       ))}
     </MapContainer>
